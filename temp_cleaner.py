@@ -13,7 +13,7 @@ class TempCleaner:
     RETURN_TYPES = ("INT",)
     RETURN_NAMES = ("files_deleted",)
     FUNCTION = "clean"
-    OUTPUT_NODE = True
+    OUTPUT_NODE = False
     CATEGORY = "🧹 Utils"
 
     def clean(self, folder_path, enabled, trigger=None):
