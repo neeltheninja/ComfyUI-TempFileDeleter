@@ -13,7 +13,7 @@ class TempCleaner:
                 "enabled": ("BOOLEAN", {"default": True}),
             },
             "optional": {
-                "any_value": ("*",),
+                "any_value": ("IMAGE",),  # Changed from "*" to specific type
             },
             "hidden": {
                 # Reserved for future use
@@ -21,13 +21,13 @@ class TempCleaner:
         }
 
     CATEGORY = "🧹 Utils"
-    INPUT_IS_LIST = True
-    RETURN_TYPES = ("*",)
+    INPUT_IS_LIST = False  # Changed to False unless specifically needed
+    RETURN_TYPES = ("IMAGE",)  # Match the input type
     RETURN_NAMES = ("pass_through",)
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
-    def execute(self, folder_path: str, enabled: bool, any_value: Any = None) -> dict:
+    def execute(self, folder_path: str, enabled: bool, any_value: Any = None):
         # Initialize response
         result_text = "No action taken"
         
@@ -48,8 +48,5 @@ class TempCleaner:
         # Print result to console
         print(result_text)
 
-        # Return both UI update and pass-through value
-        return {
-            "ui": {"text": [result_text]},
-            "result": (any_value[0] if isinstance(any_value, list) and any_value else None,)
-        }
+        # Return the pass-through value directly
+        return (any_value,)
