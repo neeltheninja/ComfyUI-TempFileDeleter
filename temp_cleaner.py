@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Any, Optional, Tuple
 
 class AlwaysEqualProxy(str):
     def __eq__(self, _):
@@ -7,7 +7,7 @@ class AlwaysEqualProxy(str):
 
     def __ne__(self, _):
         return False
-    
+
 any_type = AlwaysEqualProxy("*")
 
 class TempCleaner:
@@ -15,39 +15,50 @@ class TempCleaner:
         pass
 
     @classmethod
-    def INPUT_TYPES(s):
-        return {"required": {}, "optional": {"anything": (any_type, {}), },
-                "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO",
-                           }}
+    def INPUT_TYPES(cls) -> dict:
+        """Defines the expected input types for the node."""
+        return {
+            "required": {
+                "folder_path": ("STRING", {"default": "temp"}),
+                "enabled": ("BOOLEAN", {"default": True}),
+            }, 
+            "optional": {
+                "anything": (any_type, {}), 
+            },
+            "hidden": {
+                "unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO",
+            },
+        }
 
     RETURN_TYPES = (any_type,)
     RETURN_NAMES = ('output',)
-    INPUT_IS_LIST = True
-    OUTPUT_NODE = False
-    OUTPUT_IS_LIST = (False,)
+    OUTPUT_NODE = True
     CATEGORY = "🧹 Utils"
     FUNCTION = "execute"
 
-    def execute(self, folder_path: str, enabled: bool, **kwargs):
-        # Initialize response
-        result_text = "No action taken"
-        
-        if enabled:
-            try:
-                count = 0
-                for file in os.listdir(folder_path):
-                    file_path = os.path.join(folder_path, file)
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
-                        count += 1
-                result_text = f"Deleted {count} files from {folder_path}"
-            except Exception as e:
-                result_text = f"Error: {e}"
-        else:
-            result_text = "Cleanup disabled"
+    def execute(self, folder_path: str, enabled: bool, **kwargs) -> Tuple[Optional[Any]]:
+        """Executes the cleaning operation based on the provided inputs."""
+        if not enabled:
+            print("Cleanup disabled")
+            return (kwargs.get('anything', None),)
 
-        # Print result to console
+        result_text = self.cleanup_folder(folder_path)
         print(result_text)
+        return (kwargs.get('anything', None),)
 
-        # Return all inputs as outputs, None if not connected
-        return tuple(kwargs.get(name) for name in self.RETURN_NAMES)
+    def cleanup_folder(self, folder_path: str) -> str:
+        """Deletes files in the specified folder and returns a status message."""
+        try:
+            count = 0
+            for file in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, file)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+                    count += 1
+            return f"Deleted {count} files in folder '{folder_path}'."
+        except FileNotFoundError:
+            return f"Error: Folder '{folder_path}' not found."
+        except PermissionError:
+            return f"Error: Permission denied for '{folder_path}'."
+        except Exception as e:
+            return f"Error: {e}"
