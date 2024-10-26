@@ -10,9 +10,9 @@ class TempCleaner:
             },
         }
 
-    RETURN_TYPES = {}
+    RETURN_TYPES = ()
     FUNCTION = "clean"
-    OUTPUT_NODE = False
+    OUTPUT_NODE = True
     CATEGORY = "🧹 Utils"
 
     def clean(self, folder_path, enabled, trigger=None):
