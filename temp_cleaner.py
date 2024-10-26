@@ -13,7 +13,14 @@ class TempCleaner:
                 "enabled": ("BOOLEAN", {"default": True}),
             },
             "optional": {
-                "any_value": ("IMAGE",),  # Changed from "*" to specific type
+                "image": ("IMAGE",),
+                "latent": ("LATENT",),
+                "model": ("MODEL",),
+                "clip": ("CLIP",),
+                "vae": ("VAE",),
+                "conditioning": ("CONDITIONING",),
+                "control_net": ("CONTROL_NET",),
+                "string": ("STRING",),
             },
             "hidden": {
                 # Reserved for future use
@@ -21,13 +28,13 @@ class TempCleaner:
         }
 
     CATEGORY = "🧹 Utils"
-    INPUT_IS_LIST = False  # Changed to False unless specifically needed
-    RETURN_TYPES = ("IMAGE",)  # Match the input type
-    RETURN_NAMES = ("pass_through",)
+    INPUT_IS_LIST = False
+    RETURN_TYPES = ("IMAGE", "LATENT", "MODEL", "CLIP", "VAE", "CONDITIONING", "CONTROL_NET", "STRING",)
+    RETURN_NAMES = ("image", "latent", "model", "clip", "vae", "conditioning", "control_net", "string",)
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
-    def execute(self, folder_path: str, enabled: bool, any_value: Any = None):
+    def execute(self, folder_path: str, enabled: bool, **kwargs):
         # Initialize response
         result_text = "No action taken"
         
@@ -48,5 +55,5 @@ class TempCleaner:
         # Print result to console
         print(result_text)
 
-        # Return the pass-through value directly
-        return (any_value,)
+        # Return all inputs as outputs, None if not connected
+        return tuple(kwargs.get(name) for name in self.RETURN_NAMES)
