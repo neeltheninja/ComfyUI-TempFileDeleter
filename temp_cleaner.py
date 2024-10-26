@@ -1,25 +1,38 @@
 import os
 
 class TempCleaner:
+    def __init__(self):
+        self.type_aliases = {
+            "IMAGE": "IMAGE",
+            "LATENT": "LATENT",
+            "MODEL": "MODEL",
+            "CLIP": "CLIP",
+            "VAE": "VAE",
+            "CONDITIONING": "CONDITIONING",
+            "STRING": "STRING",
+            "INT": "INT",
+            "FLOAT": "FLOAT",
+        }
+    
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
                 "folder_path": ("STRING", {"default": "temp"}),
                 "enabled": ("BOOLEAN", {"default": True}),
-                "any_input": ("*",),  # Wildcard input type that accepts anything
+                "input": (list(cls().type_aliases.keys()),),  # Accept any of these types
             },
         }
 
-    RETURN_TYPES = ("*",)  # Return whatever type we received
+    RETURN_TYPES = tuple(list(cls().type_aliases.keys()))  # Return any of these types
     FUNCTION = "clean"
     OUTPUT_NODE = True
     CATEGORY = "🧹 Utils"
 
-    def clean(self, folder_path, enabled, any_input):
+    def clean(self, folder_path, enabled, input):
         if not enabled:
             print("Temp folder cleanup is disabled.")
-            return (any_input,)
+            return (input,)
 
         try:
             count = 0
@@ -32,4 +45,4 @@ class TempCleaner:
         except Exception as e:
             print(f"Error: {e}")
         
-        return (any_input,)  # Pass through whatever input we received
+        return (input,)
