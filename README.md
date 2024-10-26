@@ -1,7 +1,7 @@
 # TempCleaner Node for ComfyUI
 
 ## Overview
-This node is designed to streamline your workflow in ComfyUI by efficiently cleaning up temporary files at the end of each run, or wherever the node receives an input. This node takes the folder path of your temporary folder as input and can be connected to any node output.
+This node is designed to streamline your workflow in ComfyUI by efficiently cleaning up temporary files on each run. This node takes no input. You can specify "on" or "off" in the node itself, or just bypass to not use use it. 
 
 ## Installation
 
