@@ -1,38 +1,31 @@
 import os
 from typing import Any
 
+class AlwaysEqualProxy(str):
+    def __eq__(self, _):
+        return True
+
+    def __ne__(self, _):
+        return False
+    
+any_type = AlwaysEqualProxy("*")
+
 class TempCleaner:
     def __init__(self):
         pass
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "folder_path": ("STRING", {"default": "temp"}),
-                "enabled": ("BOOLEAN", {"default": True}),
-            },
-            "optional": {
-                "image": ("IMAGE",),
-                "latent": ("LATENT",),
-                "model": ("MODEL",),
-                "clip": ("CLIP",),
-                "vae": ("VAE",),
-                "conditioning": ("CONDITIONING",),
-                "control_net": ("CONTROL_NET",),
-                "string": ("STRING",),
-                "any_value": ("*",),
-            },
-            "hidden": {
-                # Reserved for future use
-            },
-        }
+    def INPUT_TYPES(s):
+        return {"required": {}, "optional": {"anything": (any_type, {}), },
+                "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO",
+                           }}
 
+    RETURN_TYPES = (any_type,)
+    RETURN_NAMES = ('output',)
+    INPUT_IS_LIST = True
+    OUTPUT_NODE = False
+    OUTPUT_IS_LIST = (False,)
     CATEGORY = "🧹 Utils"
-    INPUT_IS_LIST = False
-    RETURN_TYPES = ("IMAGE", "LATENT", "MODEL", "CLIP", "VAE", "CONDITIONING", "CONTROL_NET", "STRING",)
-    RETURN_NAMES = ("image", "latent", "model", "clip", "vae", "conditioning", "control_net", "string",)
-    OUTPUT_NODE = True
     FUNCTION = "execute"
 
     def execute(self, folder_path: str, enabled: bool, **kwargs):
