@@ -21,6 +21,7 @@ class TempCleaner:
                 "conditioning": ("CONDITIONING",),
                 "control_net": ("CONTROL_NET",),
                 "string": ("STRING",),
+                "any_value": ("*",),
             },
             "hidden": {
                 # Reserved for future use
