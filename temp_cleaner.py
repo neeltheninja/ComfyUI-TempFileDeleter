@@ -7,18 +7,19 @@ class TempCleaner:
             "required": {
                 "folder_path": ("STRING", {"default": "temp"}),
                 "enabled": ("BOOLEAN", {"default": True}),
+                "any_input": ("*",),  # Wildcard input type that accepts anything
             },
         }
 
-    RETURN_TYPES = ()
+    RETURN_TYPES = ("*",)  # Return whatever type we received
     FUNCTION = "clean"
     OUTPUT_NODE = True
     CATEGORY = "🧹 Utils"
 
-    def clean(self, folder_path, enabled, trigger=None):
+    def clean(self, folder_path, enabled, any_input):
         if not enabled:
             print("Temp folder cleanup is disabled.")
-            return {}
+            return (any_input,)
 
         try:
             count = 0
@@ -30,4 +31,5 @@ class TempCleaner:
             print(f"Deleted {count} files from {folder_path}")
         except Exception as e:
             print(f"Error: {e}")
-            return {}
+        
+        return (any_input,)  # Pass through whatever input we received
