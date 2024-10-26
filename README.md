@@ -1,5 +1,5 @@
 # TempCleaner Node for ComfyUI
-
+![shapes](/Workflows/workflow.png)
 ## Overview
 This node is designed to streamline your workflow in ComfyUI by efficiently cleaning up temporary files on each run. This node takes no input. You can specify "on" or "off" in the node itself, or just bypass to not use use it. 
 ## WARNING
