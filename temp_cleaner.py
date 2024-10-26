@@ -7,10 +7,8 @@ class TempCleaner:
             "required": {
                 "folder_path": ("STRING", {"default": "temp"}),
                 "enabled": ("BOOLEAN", {"default": True}),
-            },
-            "optional": {
                 "trigger": ("*", {}),
-            }
+            },
         }
 
     RETURN_TYPES = ("INT",)
