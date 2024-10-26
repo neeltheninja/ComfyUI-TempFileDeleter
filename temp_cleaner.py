@@ -10,8 +10,7 @@ class TempCleaner:
             },
         }
 
-    RETURN_TYPES = ("INT",)
-    RETURN_NAMES = ("files_deleted",)
+    RETURN_TYPES = {}
     FUNCTION = "clean"
     OUTPUT_NODE = False
     CATEGORY = "🧹 Utils"
@@ -19,7 +18,7 @@ class TempCleaner:
     def clean(self, folder_path, enabled, trigger=None):
         if not enabled:
             print("Temp folder cleanup is disabled.")
-            return (0,)
+            return {}
 
         try:
             count = 0
@@ -29,7 +28,6 @@ class TempCleaner:
                     os.remove(file_path)
                     count += 1
             print(f"Deleted {count} files from {folder_path}")
-            return (count,)
         except Exception as e:
             print(f"Error: {e}")
-            return (0,)
+            return {}
